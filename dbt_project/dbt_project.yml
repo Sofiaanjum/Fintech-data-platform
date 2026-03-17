@@ -1,0 +1,31 @@
+name: 'dbt_project'
+version: '1.0.0'
+config-version: 2
+
+profile: 'dbt_project'
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  dbt_project:
+    staging:
+      +materialized: view
+      +schema: staging
+      +database: "{{ 'FINTECH_DEV_DB' if target.name == 'dev' else 'FINTECH_PROD_DB' }}"
+    intermediate:
+      +materialized: ephemeral
+    marts:
+      +materialized: table
+      +schema: marts
+      +database: "{{ 'FINTECH_DEV_DB' if target.name == 'dev' else 'FINTECH_PROD_DB' }}"

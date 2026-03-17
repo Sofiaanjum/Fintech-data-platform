@@ -1,0 +1,44 @@
+version: 2
+
+sources:
+  - name: fintech_raw
+    database: FINTECH_RAW_DB
+    schema: TRANSACTIONS
+    description: "Raw transaction data landed from Kafka consumer pipeline"
+
+    tables:
+      - name: raw_transactions
+        description: "IEEE fraud detection dataset -- real-time transactions from Kafka"
+        columns:
+          - name: transaction_id
+            description: "Unique transaction identifier"
+            tests:
+              - not_null
+              - unique
+
+          - name: transaction_amt
+            description: "Transaction amount in USD"
+            tests:
+              - not_null
+
+          - name: i_fraud
+            description: "Fraud label -- 1 is fraud, 0 is legitimate"
+            tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: [0, 1]
+
+          - name: product_cd
+            description: "Product category code"
+
+          - name: card4
+            description: "Card network -- visa, mastercard etc"
+
+          - name: card6
+            description: "Card type -- credit or debit"
+
+          - name: _loaded_at
+            description: "Timestamp when row was loaded into Snowflake"
+            tests:
+              - not_null
