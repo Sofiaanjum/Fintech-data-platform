@@ -1,10 +1,11 @@
 import json
+import os
 import time
 import pandas as pd
 from kafka import KafkaProducer
 from datetime import datetime
 
-KAFKA_BROKER = "localhost:9092"
+KAFKA_BROKER = os.getenv("KAFKA_BROKER", "localhost:9092")
 TOPIC = "txn.raw"
 DATA_PATH = "data/raw/train_transaction.csv"
 BATCH_SIZE = 100
@@ -20,7 +21,7 @@ def main():
     )
 
     print(f"Reading {DATA_PATH}...")
-    df = pd.read_csv(DATA_PATH)
+    df = pd.read_csv(DATA_PATH, nrows=50000)
     df = df.where(pd.notnull(df), None)
 
     total = len(df)
