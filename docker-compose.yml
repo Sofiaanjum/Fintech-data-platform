@@ -117,8 +117,10 @@ services:
       - "8501:8501"
     volumes:
       - ./streamlit:/app
+    env_file:
+      - .env
     working_dir: /app
     command: >
-      bash -c "pip install streamlit snowflake-connector-python pandas plotly --quiet
+      bash -c "pip install streamlit snowflake-connector-python pandas plotly python-dotenv --quiet
       && streamlit run app.py --server.port=8501 --server.address=0.0.0.0"
     restart: unless-stopped
