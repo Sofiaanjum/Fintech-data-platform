@@ -7,9 +7,9 @@ from snowflake.connector.pandas_tools import write_pandas
 from dotenv import load_dotenv
 from datetime import datetime, timezone
 
-load_dotenv()
+load_dotenv(override=False)
 
-KAFKA_BROKER = "localhost:9092"
+KAFKA_BROKER = os.getenv("KAFKA_BROKER", "localhost:9092")
 TOPIC = "txn.raw"
 GROUP_ID = "txn-consumer-group"
 BATCH_SIZE = 500

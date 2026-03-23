@@ -38,12 +38,13 @@ with DAG(
 
     dbt_run = BashOperator(
         task_id="dbt_run",
-        bash_command=f"cd {DBT_DIR} && {VENV}/dbt run --no-partial-parse",
+        bash_command=f"cd {DBT_DIR} && {VENV}/dbt run --profiles-dir {DBT_DIR} --no-partial-parse",
+
     )
 
     dbt_test = BashOperator(
         task_id="dbt_test",
-        bash_command=f"cd {DBT_DIR} && {VENV}/dbt test --select source:fintech_raw --no-partial-parse",
+        bash_command=f"cd {DBT_DIR} && {VENV}/dbt test --profiles-dir {DBT_DIR} --select source:fintech_raw --no-partial-parse",
     )
 
     end = EmptyOperator(task_id="end")
