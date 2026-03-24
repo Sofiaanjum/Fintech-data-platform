@@ -15,4 +15,6 @@ terraform/.terraform/
 terraform/*.tfstate
 terraform/*.tfstate.backup
 
-.DS_Store
+.DS_Storeterraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
