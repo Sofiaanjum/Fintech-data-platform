@@ -142,10 +142,12 @@ dbt run --target prod   # writes to FINTECH_PROD_DB.STAGING
 Patient IDs and sensitive fields are tokenized via SHA-256 before they land in Snowflake -- PII never touches the raw layer in plaintext.
 
 ### 5. Kafka Internal vs External Ports
-Kafka advertises two listeners:
-- `PLAINTEXT://kafka:29092` -- for internal Docker network (Airflow, Python consumers)
-- `PLAINTEXT_HOST://localhost:9092` -- for local development from host machine
+Kafka advertises two listeners -- PLAINTEXT here is the protocol name (unencrypted, suitable for local dev), not the hostname:
 
+PLAINTEXT://kafka:29092 -- internal Docker network. Containers like Airflow and Python consumers use kafka as the hostname since Docker resolves service names automatically within the network.
+PLAINTEXT_HOST://localhost:9092 -- external access from the host machine (your terminal).
+
+In production, PLAINTEXT would be replaced with SSL or SASL_SSL for encrypted and authenticated connections.
 ---
 
 ## Getting Started
