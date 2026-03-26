@@ -17,8 +17,9 @@
 Raw financial transaction data arrives continuously, is messy, contains sensitive PII, and needs to be reliable enough to power business decisions. Most data projects stop at a CSV. This one does not.
 
 ---
-
 ## Architecture
+
+![Architecture](docs/architecture.png)
 
 ```
 IEEE-CIS Fraud Dataset (590K+ transactions)
