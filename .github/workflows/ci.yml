@@ -52,9 +52,9 @@ jobs:
         working-directory: dbt_project
         run: dbt deps
 
-      - name: dbt compile
+      - name: dbt parse
         working-directory: dbt_project
-        run: dbt compile --profiles-dir ~/.dbt --no-partial-parse
+        run: dbt parse --profiles-dir ~/.dbt --no-partial-parse
 
   python-ci:
     name: Python Lint
