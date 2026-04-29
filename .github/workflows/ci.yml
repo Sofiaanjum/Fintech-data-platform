@@ -1,0 +1,79 @@
+name: Fintech Pipeline CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  dbt-ci:
+    name: dbt Lint and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dbt
+        run: pip install dbt-snowflake==1.8.*
+
+      - name: Create dbt profiles
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << EOF
+          dbt_project:
+            target: dev
+            outputs:
+              dev:
+                type: snowflake
+                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.SNOWFLAKE_USER }}
+                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+                role: DATA_ENG_ROLE
+                warehouse: FINTECH_WH
+                database: FINTECH_DEV_DB
+                schema: STAGING
+                threads: 4
+                client_session_keep_alive: false
+          EOF
+
+      - name: dbt deps
+        working-directory: dbt_project
+        run: dbt deps
+
+      - name: dbt compile
+        working-directory: dbt_project
+        run: dbt compile --profiles-dir ~/.dbt
+
+      - name: dbt test
+        working-directory: dbt_project
+        run: dbt test --select source:fintech_raw --profiles-dir ~/.dbt
+
+  python-ci:
+    name: Python Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install flake8
+
+      - name: Lint ingestion code
+        run: |
+          flake8 ingestion/ \
+            --max-line-length=100 \
+            --ignore=E501,W503
