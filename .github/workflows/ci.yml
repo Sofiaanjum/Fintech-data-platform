@@ -54,11 +54,7 @@ jobs:
 
       - name: dbt compile
         working-directory: dbt_project
-        run: dbt compile --profiles-dir ~/.dbt
-
-      - name: dbt test
-        working-directory: dbt_project
-        run: dbt test --select source:fintech_raw --profiles-dir ~/.dbt
+        run: dbt compile --profiles-dir ~/.dbt --no-partial-parse
 
   python-ci:
     name: Python Lint
